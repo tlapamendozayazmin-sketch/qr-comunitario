@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Comunitario | BUAP</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f5fc;
+            color: #29263d;
+        }
+
+        /* ENCABEZADO */
+        header {
+            background: linear-gradient(120deg, #5142cc, #8274ed);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 15px;
+        }
+
+        .descripcion {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .contenedor {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .titulo {
+            margin-bottom: 20px;
+        }
+
+        .titulo h2 {
+            font-size: 23px;
+            margin-bottom: 7px;
+        }
+
+        .titulo p {
+            color: #777;
+        }
+
+        /* PESTAÑAS */
+        .categorias {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 8px;
+        }
+
+        .categoria {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background: white;
+            color: #5142cc;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: .3s;
+        }
+
+        .categoria:hover,
+        .categoria.activa {
+            background: #5142cc;
+            color: white;
+        }
+
+        /* TARJETAS */
+        .productos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .tarjeta {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,.07);
+            transition: .3s;
+        }
+
+        .tarjeta:hover {
+            transform: translateY(-5px);
+        }
+
+        .tarjeta img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .informacion {
+            padding: 15px;
+        }
+
+        .informacion h3 {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+
+        .precio {
+            color: #5142cc;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .facultad {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        /* BOTÓN WHATSAPP */
+        .whatsapp {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #16864b;
+            color: white;
+            padding: 11px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .whatsapp:hover {
+            background: #106c3b;
+        }
+
+        /* PIE DE PÁGINA */
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* DISEÑO PARA CELULARES */
+        @media (max-width: 800px) {
+            .productos {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .tarjeta img {
+                height: 145px;
+            }
+
+            .informacion {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .productos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header>
+        <h1>QR Comunitario</h1>
+        <p>Directorio de emprendedores de la BUAP</p>
+
+        <div class="descripcion">
+            Apoya el talento universitario.
+            Encuentra productos y servicios ofrecidos por estudiantes.
+        </div>
+    </header>
+
+    <main class="contenedor">
+
+        <div class="titulo">
+            <h2>Explora nuestro catálogo</h2>
+            <p>Encuentra lo que necesitas y apoya a tus compañeros.</p>
+        </div>
+
+        <!-- CATEGORÍAS -->
+        <nav class="categorias">
+
+            <button class="categoria activa"
+                onclick="filtrarProductos('Comida', this)">
+                🍔 Comida
+            </button>
+
+            <button class="categoria"
+                onclick="filtrarProductos('Bebidas', this)">
+                🥤 Bebidas
+            </button>
+
+            <button class="categoria"
+                onclick="filtrarProductos('Accesorios', this)">
+                👜 Accesorios
+            </button>
+
+            <button class="categoria"
+                onclick="filtrarProductos('Maquillaje', this)">
+                💄Maquillaje 
+            </button>
+           <button class="categoria"
+                onclick="filtrarProductos('Snacks', this)">
+               🍿 Snacks
+            </button>
+
+
+        </nav>
+
+        <!-- PRODUCTOS -->
+        <section class="productos" id="listaProductos">
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>QR Comunitario © 2026</p>
+        <p>Impulsando el emprendimiento universitario BUAP.</p>
+    </footer>
+
+
+    <script>
+
+        // BASE DE DATOS DE PRODUCTOS DE EJEMPLO
+
+const productos = [
+
+    {
+        nombre: "Uvas cubiertas",
+        categoria: "Snacks",
+        precio: "$55",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/uvas cubiertas.jpeg",
+        telefono: "522221232705"
+    },
+
+    {
+        nombre: "Taxis azules",
+        categoria: "Snacks",
+        precio: "$60",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/taxis azules.jpeg",
+        telefono: "522221232705"
+    },
+
+    {
+        nombre: "Bebidas locas",
+        categoria: "Bebidas",
+        precio: "$60",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/bebidas locas.jpeg",
+        telefono: "522221232705"
+    },
+
+    {
+        nombre: "Bolso de mano",
+        categoria: "Accesorios",
+        precio: "$30",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/bolsa de mano.jpeg",
+        telefono: "522211126490"
+    },
+
+    {
+        nombre: "Cosmetiquera",
+        categoria: "Accesorios",
+        precio: "$40",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/cosmetiquera.jpeg",
+        telefono: "522211126490"
+    },
+
+    {
+        nombre: "Bolso negro",
+        categoria: "Accesorios",
+        precio: "$120",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/Bolsa negra.jpeg",
+        telefono: "522211126490"
+    },
+
+    {
+        nombre: "Labiales KIKO",
+        categoria: "Maquillaje",
+        precio: "$280",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/labial kiko.jpeg",
+        telefono: "522211705982"
+    },
+
+    {
+        nombre: "Lip butter",
+        categoria: "Maquillaje",
+        precio: "$280",
+        facultad: "Facultad de Administración",
+        imagen: "./imagenes/lip butter.jpeg",
+        telefono: "522211705982"
+    }
+
+];
+
+        // FUNCIÓN PARA MOSTRAR PRODUCTOS
+
+        function mostrarProductos(categoria,boton) {
+
+            const contenedor = document.getElementById("listaProductos");
+
+            contenedor.innerHTML = "";
+
+            const filtrados = productos.filter(producto =>
+                producto.categoria === categoria
+            );
+
+            filtrados.forEach(producto => {
+
+                const mensaje = `Hola, vi tu producto ${producto.nombre} en QR Comunitario. Me gustaría recibir más información.`;
+
+                const enlace = /^\d{10,15}$/.test(producto.telefono)
+                    ? `https://wa.me/${producto.telefono}?text=${encodeURIComponent(mensaje)}`
+                    : `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+
+                const tarjeta = document.createElement("article");
+
+                tarjeta.className = "tarjeta";
+
+                tarjeta.innerHTML = `
+
+                    <img src="${producto.imagen}"
+                         alt="${producto.nombre}"
+                         style="width:100%;height:250px;
+                         object-fit:cover;">
+                    <div class="informacion">
+
+                        <h3>${producto.nombre}</h3>
+
+                        <p class="precio">${producto.precio}</p>
+
+                        <p class="facultad">
+                            ${producto.facultad}
+                        </p>
+
+                        <a href="${enlace}"
+                           class="whatsapp"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Contactar por WhatsApp
+                        </a>
+
+                    </div>
+                `;
+
+                contenedor.appendChild(tarjeta);
+
+            });
+
+        }
+
+
+        // FUNCIÓN PARA CAMBIAR DE CATEGORÍA
+
+        function filtrarProductos(categoria, boton) {
+
+            document.querySelectorAll(".categoria").forEach(elemento => {
+                elemento.classList.remove("activa");
+            });
+
+            boton.classList.add("activa");
+
+            mostrarProductos(categoria);
+
+        }
+
+
+        // MOSTRAR COMIDA AL INICIAR
+
+        mostrarProductos("Comida");
+
+    </script>
+
+</body>
+</html>
